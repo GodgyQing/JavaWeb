@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vuejs-2.5.16.js"></script>
+    <script src="js/axios-0.18.0.js"></script>
+</head>
+<body style="text-align:center;">
+<div id="app">
+    <form action="" method="post">
+        <table border="0" width="350px" cellpadding="0" cellspacing="0" align="center" style="background:#CFF;" >
+            <tr>
+                <td height="50" align="center">&nbsp;bid:&nbsp;&nbsp;
+                    <input type="text" value="bid" v-model="bid" placeholder="Integer" /></td>
+            </tr>
+            <tr>
+                <td height="50" align="center">&nbsp;bname:&nbsp;&nbsp;
+                    <input type="text" value="bname"  v-model="bname" placeholder="String" /></td>
+            </tr>
+            <tr>
+                <td height="50" align="center">&nbsp;author:&nbsp;&nbsp;
+                    <input type="text" value="author"  v-model="author" placeholder="String" /></td>
+            </tr>
+            <tr>
+                <td height="50" align="center">&nbsp;price:&nbsp;&nbsp;
+                    <input type="text" value="price"  v-model="price" placeholder="BigDecimal" /></td>
+            </tr>
+            <tr>
+                <td height="50">
+                    <input type="submit" value="submit" @click="addbook" />
+                    &nbsp;&nbsp;&nbsp;&nbsp;
+                    <input type="reset" value="reset" />
+                </td>
+            </tr>
+        </table>
+    </form>
+</div>
+    <script>
+        var vm = new Vue({
+            el: "#app",
+            data:{
+                book:{
+                    'bid':"",
+                    'bname':"",
+                    'author':"",
+                    'price':"",
+            },
+                username:""
+            },
+            methods:{
+                addbook(){
+                    axios.get("user?method=add",{bid: this.bid, bname: this.bname, author: this.author, price: this.price})
+                },
+                logout(){
+                    axios.get("user?method=logout").then(response=>{
+                        window.location = "index.html";
+                    });
+                }
+            },
+            created(){ //钩子函数，实例创建后就调用
+                axios.get("user?method=userinfo").then(response=>{
+                    var user = response.data;
+                    vm.username = user.username;
+                });
+            }
+        });
+
+    </script>
+</body>
+</html>

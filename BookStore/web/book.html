@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src="js/vuejs-2.5.16.js"></script>
+    <script src="js/axios-0.18.0.js"></script>
+</head>
+<body>
+
+<div id="app">
+
+    <span>welcome,{{username}}</span> | <a href="" @click.prevent="logout">logout</a>
+
+    <table>
+        <tr>
+            <td>bid</td>
+            <td>bname</td>
+            <td>author</td>
+            <td>price</td>
+            <td>operation</td>
+        </tr>
+        <tr v-for="book in tableData">
+            <td v-html="book.bid"></td>
+            <td v-html="book.bname"></td>
+            <td v-html="book.author"></td>
+            <td v-html="book.price"></td>
+            <td>
+                <a href="" @click.prevent='toEdit(book.bid)'>update</a>
+                <span>|</span>
+                <a href="" @click.prevent='deleteBook(book.bid)'>delete</a>
+            </td>
+        </tr>
+    </table>
+</div>
+<script>
+    var vm = new Vue({
+        el: "#app",
+        data:{
+            tableData:[],
+            username:""
+        },
+        methods:{
+            toEdit(bid){
+
+            },
+            deleteBook(bid){
+                axios.get("book?method=del&bid="+bid).then(response=>{
+                    alert(response.data);
+                });
+            },
+            logout(){
+                axios.get("user?method=logout").then(response=>{
+                    window.location = "index.html";
+                });
+            }
+        },
+        created(){
+            axios.get("book?method=queryAll").then(response=>{
+                    vm.tableData = response.data;
+            });
+            axios.get("user?method=userinfo").then(response=>{
+               var user = response.data;
+               vm.username = user.username;
+            });
+        }
+    });
+
+</script>
+</body>
+</html>
